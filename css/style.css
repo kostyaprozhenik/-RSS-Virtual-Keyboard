@@ -3,22 +3,22 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-  
+
 .virtual-keyboard__heading {
   font-size: 32px;
   text-align: center;
-  color: Teal;
+  color: #353838
 }
-  
+
 .virtual-keyboard__info {
   margin-top: 20px;
 }
-  
+
 .virtual-keyboard__info p {
   margin: 0;
   margin-bottom: 10px;
 }
-  
+
 .textarea {
   box-sizing: border-box;
   width: 100%;
@@ -35,7 +35,7 @@
   display: flex;
   flex-wrap: wrap;
   padding: 8px;
-  background-color: DarkCyan;
+  background-color: Gray;
   border-radius: 10px;
 
   -webkit-user-select: none;
@@ -43,7 +43,7 @@
       -ms-user-select: none;
           user-select: none;
 }
-  
+
 .keyboard__key {
   width: 50px;
   height: 50px;
@@ -52,7 +52,7 @@
   font-size: 16px;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
-  background-color: MediumTurquoise;
+  background-color: black;
   border: none;
   border-radius: 5px;
   outline: none;
@@ -60,21 +60,21 @@
   transition: background-color 0.2s, transform 0.1s;
 }
 .keyboard__key:hover {
-  background-color: Turquoise;
+  background-color: #c1c1c1;
 }
-  
+
 .keyboard__key--big {
   width: 110px;
 }
-  
+
 .keyboard__key--biggest {
   width: 410px;
 }
-  
+
 .keyboard__key--dark {
-  background-color: LightSeaGreen;
+  background-color: black;
 }
-  
+
 body {
   margin: 0;
   font-weight: normal;
@@ -84,10 +84,10 @@ body {
 }
 
 .keyboard__key.keyboard__key--active {
-  background-color: Aquamarine;
+  background-color: #ff9800
 }
 
 .keyboard__key.keyboard__key--pressed {
-  background-color: Aquamarine;
+  background-color: #ff9800;
   transform: scale(1.1);
 }
