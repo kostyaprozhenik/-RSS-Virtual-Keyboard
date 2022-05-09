@@ -37,6 +37,11 @@
   padding: 8px;
   background-color: DarkCyan;
   border-radius: 10px;
+
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
   
 .keyboard__key {
@@ -78,7 +83,11 @@ body {
   font-family: Georgia, "Times New Roman", Times, serif;
 }
 
+.keyboard__key.keyboard__key--active {
+  background-color: Aquamarine;
+}
+
 .keyboard__key.keyboard__key--pressed {
-    background-color: Aquamarine;
-    transform: scale(1.1);
+  background-color: Aquamarine;
+  transform: scale(1.1);
 }
