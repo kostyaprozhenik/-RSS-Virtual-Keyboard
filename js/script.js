@@ -9,7 +9,7 @@ const data = [
       text: ['2', '@', '2', '"'], keyCode: 'Digit2',
     },
     {
-      text: ['3', '@', '3', '№'], keyCode: 'Digit3',
+      text: ['3', '#', '3', '№'], keyCode: 'Digit3',
     },
     {
       text: ['4', '$', '4', ';'], keyCode: 'Digit4',
@@ -265,59 +265,66 @@ function changeKeyboardLayout(type) {
 function keypressHandler(id, input) {
   const textarea = document.querySelector('.textarea');
   const curPos = textarea.selectionStart;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
   textarea.focus();
   
   switch (id) {
-      case 'Backspace':
-        if (!curPos) {
+    case 'Backspace':
+      if (end === start && start === 0) {
         break;
-    }
-    textarea.value = textarea.value.slice(0, curPos - 1) + textarea.value.slice(curPos);
-    textarea.selectionStart = curPos - 1;
-    textarea.selectionEnd = curPos - 1;
-    break;
+      }
+      if (end > start) {
+        textarea.setRangeText('');
+        break;
+      }
+      textarea.value = textarea.value.slice(0, curPos - 1) + textarea.value.slice(curPos);
+      textarea.selectionStart = curPos - 1;
+      textarea.selectionEnd = curPos - 1;
+      break;
     case 'Tab':
-        textarea.value = `${textarea.value.slice(0, curPos)}    ${textarea.value.slice(curPos)}`;
-        textarea.selectionStart = curPos + 4;
-        textarea.selectionEnd = curPos + 4;
-        break;
+      textarea.setRangeText('    ');
+      textarea.selectionStart = curPos + 4;
+      break;
     case 'Delete':
-        textarea.value = textarea.value.slice(0, curPos) + textarea.value.slice(curPos + 1);
-        textarea.selectionStart = curPos;
-        textarea.selectionEnd = curPos;
+      if (end > start) {
+        textarea.setRangeText('');
         break;
+      }
+      textarea.value = textarea.value.slice(0, curPos) + textarea.value.slice(curPos + 1);
+      textarea.selectionStart = curPos;
+      textarea.selectionEnd = curPos;
+      break;
     case 'CapsLock':
-        if (!keyPressedFlag) {
-          isCaps = !isCaps;
-          document.querySelector('#CapsLock').classList.toggle('keyboard__key--active');
-          changeKeyboardLayout('caseChangeOnCaps');
-          keyPressedFlag = true;
-        }
-        break;
+      if (!keyPressedFlag) {
+        isCaps = !isCaps;
+        document.querySelector('#CapsLock').classList.toggle('keyboard__key--active');
+        changeKeyboardLayout('caseChangeOnCaps');
+        keyPressedFlag = true;
+      }
+      break;
     case 'Enter':
-        textarea.value = `${textarea.value.slice(0, curPos)}\n${textarea.value.slice(curPos)}`;
-        textarea.selectionStart = curPos + 1;
-        textarea.selectionEnd = curPos + 1;
-        break;
+      textarea.setRangeText('\n');
+      textarea.selectionStart = curPos + 1;
+      break;
     case 'ShiftLeft':
     case 'ShiftRight':
-        isShiftPressed = true;
-        break;
+      isShiftPressed = true;
+      break;
     case 'AltLeft':
-        isAltPressed = true;
-        break;
+      isAltPressed = true;
+      break;
     case 'ControlLeft':
-        isCtrlPressed = true;
-        break;
+      isCtrlPressed = true;
+      break;
     case 'ControlRight':
     case 'AltRight':
     case 'MetaLeft':
         break;
     default:
-        textarea.value = textarea.value.slice(0, curPos) + input + textarea.value.slice(curPos);
-        textarea.selectionStart = curPos + 1;
-        textarea.selectionEnd = curPos + 1;
-        break;
+      textarea.setRangeText(input);
+      textarea.selectionStart = curPos + 1;
+      break;
     }
 
     if (isAltPressed && isCtrlPressed && !keyPressedFlag) {
@@ -335,6 +342,8 @@ function keypressHandler(id, input) {
 }
 
 function keyUnpressHandler(id) {
+  const textarea = document.querySelector('.textarea');
+  textarea.focus();
   switch (id) {
     case 'ShiftLeft':
     case 'ShiftRight':
