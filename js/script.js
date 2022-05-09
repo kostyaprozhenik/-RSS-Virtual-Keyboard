@@ -200,6 +200,43 @@ const data = [
       text: ['Ctrl', 'Ctrl', 'Ctrl', 'Ctrl'], keyCode: 'ControlRight', color: 'keyboard__key--dark',
     },
 ];
+
+function isKeyOnVirtualKeyboard(code) {
+  let isFound = false;
+  data.forEach((key) => {
+    if (key.keyCode === code) {
+      isFound = true;
+    }
+    });
+  return isFound;
+}
+  
+function keyDownHandler(e) {
+  e.preventDefault();
+  if (isKeyOnVirtualKeyboard(e.code)) {
+    document.querySelector(`#${e.code}`).classList.add('keyboard__key--pressed');
+  }
+}
+  
+function keyUpHandler(e) {
+  if (isKeyOnVirtualKeyboard(e.code)) {
+    document.querySelector(`#${e.code}`).classList.remove('keyboard__key--pressed');
+  }
+}
+  
+function mouseDownHandler(e) {
+  if (e.target.classList.contains('keyboard__key')) {
+    e.target.classList.add('keyboard__key--pressed');
+  }
+}
+  
+function mouseUpHandler(e) {
+  if (e.target.classList.contains('keyboard__key')) {
+    document.querySelectorAll('.keyboard__key').forEach((key) => {
+    key.classList.remove('keyboard__key--pressed');
+    });
+    }
+}
   
   
 document.addEventListener('DOMContentLoaded', () => {
@@ -244,4 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
   p.textContent = 'Клавиатура создана в операционной системе Windows';
   info.append(p);
   section.append(info);
+
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+  keyboard.addEventListener('mousedown', mouseDownHandler);
+  keyboard.addEventListener('mouseup', mouseUpHandler);
 });

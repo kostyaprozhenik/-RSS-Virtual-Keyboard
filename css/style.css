@@ -58,11 +58,6 @@
   background-color: Turquoise;
 }
   
-.keyboard__key--active {
-  background-color: Turquoise;
-  transform: scale(1.1);
-}
-  
 .keyboard__key--big {
   width: 110px;
 }
@@ -81,4 +76,9 @@ body {
   font-size: 16px;
   line-height: 1.5;
   font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.keyboard__key.keyboard__key--pressed {
+    background-color: Aquamarine;
+    transform: scale(1.1);
 }
