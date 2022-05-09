@@ -17,6 +17,7 @@
 .virtual-keyboard__info p {
   margin: 0;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .textarea {
