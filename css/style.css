@@ -1,7 +1,84 @@
+.virtual-keyboard {
+  width: 916px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+  
+.virtual-keyboard__heading {
+  font-size: 32px;
+  text-align: center;
+  color: Teal;
+}
+  
+.virtual-keyboard__info {
+  margin-top: 20px;
+}
+  
+.virtual-keyboard__info p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+  
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 200px;
+  padding: 5px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 10px;
+  resize: none;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  background-color: DarkCyan;
+  border-radius: 10px;
+}
+  
+.keyboard__key {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  font-weight: 700;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: MediumTurquoise;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.keyboard__key:hover {
+  background-color: Turquoise;
+}
+  
+.keyboard__key--active {
+  background-color: Turquoise;
+  transform: scale(1.1);
+}
+  
+.keyboard__key--big {
+  width: 110px;
+}
+  
+.keyboard__key--biggest {
+  width: 410px;
+}
+  
+.keyboard__key--dark {
+  background-color: LightSeaGreen;
+}
+  
 body {
-    margin: 0;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 1.2;
-    font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
