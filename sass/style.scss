@@ -1,0 +1,11 @@
+@import "blocks/virtual-keyboard.scss";
+@import "blocks/textarea.scss";
+@import "blocks/keyboard.scss";
+
+body {
+  margin: 0;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
