@@ -203,6 +203,7 @@ const data = [
 
 let isShiftPressed = false;
 let isAltPressed = false;
+let isCtrlPressed = false;
 let keyboardLayout = 0;
 let isCaps = false;
 let keyPressedFlag = false;
@@ -306,6 +307,8 @@ function keypressHandler(id, input) {
         isAltPressed = true;
         break;
     case 'ControlLeft':
+        isCtrlPressed = true;
+        break;
     case 'ControlRight':
     case 'AltRight':
     case 'MetaLeft':
@@ -317,7 +320,7 @@ function keypressHandler(id, input) {
         break;
     }
 
-    if (isAltPressed && isShiftPressed && !keyPressedFlag) {
+    if (isAltPressed && isCtrlPressed && !keyPressedFlag) {
         isEng = !isEng;
 
         changeKeyboardLayout('langChange');
@@ -341,6 +344,9 @@ function keyUnpressHandler(id) {
     case 'AltLeft':
       isAltPressed = false;
       break;
+    case 'ControlLeft':
+      isCtrlPressed = false;
+      break;  
     default:
       break;
     }
@@ -431,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
   p1.textContent = 'Клавиатура создана в операционной системе Windows';
   info.append(p1);
   const p2 = document.createElement('p');
-  p2.textContent = 'Смена языка: левые Shift + Alt';
+  p2.textContent = 'Смена языка: левые Ctrl + Alt';
   info.append(p2);
   section.append(info);
 
