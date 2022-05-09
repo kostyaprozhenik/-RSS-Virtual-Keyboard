@@ -182,7 +182,7 @@ const data = [
       text: ['Alt', 'Alt', 'Alt', 'Alt'], keyCode: 'AltLeft', color: 'keyboard__key--dark',
     },
     {
-      text: ['', '', '', ''], keyCode: 'Space', color: undefined, size: 'keyboard__key--biggest',
+      text: [' ', ' ', ' ', ' '], keyCode: 'Space', color: undefined, size: 'keyboard__key--biggest',
     },
     {
       text: ['Alt', 'Alt', 'Alt', 'Alt'], keyCode: 'AltRight', color: 'keyboard__key--dark',
@@ -201,6 +201,10 @@ const data = [
     },
 ];
 
+let isShiftPressed = false;
+let isAltPressed = false;
+let isCtrlPressed = false;
+
 function isKeyOnVirtualKeyboard(code) {
   let isFound = false;
   data.forEach((key) => {
@@ -210,11 +214,76 @@ function isKeyOnVirtualKeyboard(code) {
     });
   return isFound;
 }
+
+function keypressHandler(id, input) {
+  const textarea = document.querySelector('.textarea');
+  const curPos = textarea.selectionStart;
+  textarea.focus();
+  
+  switch (id) {
+      case 'Backspace':
+        if (!curPos) {
+        break;
+    }
+    textarea.value = textarea.value.slice(0, curPos - 1) + textarea.value.slice(curPos);
+    textarea.selectionStart = curPos - 1;
+    textarea.selectionEnd = curPos - 1;
+    break;
+    case 'Tab':
+        textarea.value = `${textarea.value.slice(0, curPos)}    ${textarea.value.slice(curPos)}`;
+        textarea.selectionStart = curPos + 4;
+        textarea.selectionEnd = curPos + 4;
+        break;
+    case 'Delete':
+        textarea.value = textarea.value.slice(0, curPos) + textarea.value.slice(curPos + 1);
+        textarea.selectionStart = curPos;
+        textarea.selectionEnd = curPos;
+        break;
+    case 'CapsLock':
+        break;
+    case 'Enter':
+        textarea.value = `${textarea.value.slice(0, curPos)}\n${textarea.value.slice(curPos)}`;
+        textarea.selectionStart = curPos + 1;
+        textarea.selectionEnd = curPos + 1;
+        break;
+    case 'ShiftLeft':
+        isShiftPressed = true;
+        break;
+    case 'AltLeft':
+        isAltPressed = true;
+        break;
+    case 'ControlLeft':
+        isCtrlPressed = true;
+        break;
+    case 'ControlRight':
+    case 'ShiftRight':
+    case 'AltRight':
+    case 'MetaLeft':
+        break;
+    default:
+        textarea.value = textarea.value.slice(0, curPos) + input + textarea.value.slice(curPos);
+        textarea.selectionStart = curPos + 1;
+        textarea.selectionEnd = curPos + 1;
+        break;
+    }
+  
+    if (isShiftPressed) {
+      
+    }
+  
+    if (isCtrlPressed && isAltPressed) {
+      
+    }
+}
   
 function keyDownHandler(e) {
   e.preventDefault();
   if (isKeyOnVirtualKeyboard(e.code)) {
     document.querySelector(`#${e.code}`).classList.add('keyboard__key--pressed');
+
+    const id = document.querySelector(`#${e.code}`).getAttribute('id');
+    const input = document.querySelector(`#${e.code}`).textContent;
+    keypressHandler(id, input);
   }
 }
   
@@ -227,6 +296,10 @@ function keyUpHandler(e) {
 function mouseDownHandler(e) {
   if (e.target.classList.contains('keyboard__key')) {
     e.target.classList.add('keyboard__key--pressed');
+
+    const id = e.target.getAttribute('id');
+    const input = document.querySelector(`#${id}`).textContent;
+    keypressHandler(id, input);
   }
 }
   
