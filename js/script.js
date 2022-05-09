@@ -203,7 +203,10 @@ const data = [
 
 let isShiftPressed = false;
 let isAltPressed = false;
-let isCtrlPressed = false;
+let keyboardLayout = 0;
+let isCaps = false;
+let keyPressedFlag = false;
+let isEng;
 
 function isKeyOnVirtualKeyboard(code) {
   let isFound = false;
@@ -217,6 +220,7 @@ function isKeyOnVirtualKeyboard(code) {
 
 function keypressHandler(id, input) {
   const textarea = document.querySelector('.textarea');
+  const keys = document.querySelectorAll('.keyboard__key');
   const curPos = textarea.selectionStart;
   textarea.focus();
   
@@ -240,6 +244,27 @@ function keypressHandler(id, input) {
         textarea.selectionEnd = curPos;
         break;
     case 'CapsLock':
+        if (!keyPressedFlag) {
+          isCaps = !isCaps;
+          document.querySelector('#CapsLock').classList.toggle('keyboard__key--active');
+            if (isEng && !isCaps) {
+              keyboardLayout = 0;
+            }
+            if (isEng && isCaps) {
+              keyboardLayout = 1;
+            }
+            if (!isEng && !isCaps) {
+              keyboardLayout = 2;
+            }
+            if (!isEng && isCaps) {
+              keyboardLayout = 3;
+            }
+    
+            for (let i = 0; i < keys.length; i += 1) {
+              keys[i].textContent = data[i].text[keyboardLayout];
+            }
+            keyPressedFlag = true;
+        }
         break;
     case 'Enter':
         textarea.value = `${textarea.value.slice(0, curPos)}\n${textarea.value.slice(curPos)}`;
@@ -253,8 +278,6 @@ function keypressHandler(id, input) {
         isAltPressed = true;
         break;
     case 'ControlLeft':
-        isCtrlPressed = true;
-        break;
     case 'ControlRight':
     case 'ShiftRight':
     case 'AltRight':
@@ -266,14 +289,46 @@ function keypressHandler(id, input) {
         textarea.selectionEnd = curPos + 1;
         break;
     }
-  
-    if (isShiftPressed) {
-      
+
+    if (isAltPressed && isShiftPressed && !keyPressedFlag) {
+        isEng = !isEng;
+    
+        if (isEng && !isCaps) {
+          keyboardLayout = 0;
+        }
+        if (isEng && isCaps) {
+          keyboardLayout = 1;
+        }
+        if (!isEng && !isCaps) {
+          keyboardLayout = 2;
+        }
+        if (!isEng && isCaps) {
+          keyboardLayout = 3;
+        }
+    
+        for (let i = 0; i < keys.length; i += 1) {
+          keys[i].textContent = data[i].text[keyboardLayout];
+        }
+    
+        localStorage.setItem('isEng', isEng);
+    
+        keyPressedFlag = true;
+    }
+}
+
+function keyUnpressHandler(id) {
+  switch (id) {
+    case 'ShiftLeft':
+      isShiftPressed = false;
+      break;
+    case 'AltLeft':
+      isAltPressed = false;
+      break;
+    default:
+      break;
     }
   
-    if (isCtrlPressed && isAltPressed) {
-      
-    }
+  keyPressedFlag = false;
 }
   
 function keyDownHandler(e) {
@@ -290,6 +345,9 @@ function keyDownHandler(e) {
 function keyUpHandler(e) {
   if (isKeyOnVirtualKeyboard(e.code)) {
     document.querySelector(`#${e.code}`).classList.remove('keyboard__key--pressed');
+
+    const id = document.querySelector(`#${e.code}`).getAttribute('id');
+    keyUnpressHandler(id);
   }
 }
   
@@ -309,6 +367,8 @@ function mouseUpHandler(e) {
     key.classList.remove('keyboard__key--pressed');
     });
     }
+  const id = e.target.getAttribute('id');
+  keyUnpressHandler(id);
 }
   
   
@@ -331,12 +391,12 @@ document.addEventListener('DOMContentLoaded', () => {
   keyboard.classList.add('keyboard');
   section.append(keyboard);
   
-  const keyboardLayout = 0;
+  isEng = (localStorage.getItem('isEng') === 'true');
   data.forEach((key) => {
     const keyElement = document.createElement('button');
     keyElement.classList.add('keyboard__key');
     keyElement.setAttribute('id', key.keyCode);
-    keyElement.textContent = key.text[keyboardLayout];
+    keyElement.textContent = (isEng) ? key.text[0] : key.text[2];
   
     if (key.color) {
         keyElement.classList.add(key.color);
@@ -350,9 +410,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const info = document.createElement('div');
   info.classList.add('virtual-keyboard__info');
-  const p = document.createElement('p');
-  p.textContent = 'Клавиатура создана в операционной системе Windows';
-  info.append(p);
+  const p1 = document.createElement('p');
+  p1.textContent = 'Клавиатура создана в операционной системе Windows';
+  info.append(p1);
+  const p2 = document.createElement('p');
+  p2.textContent = 'Смена языка: левые Shift + Alt';
+  info.append(p2);
   section.append(info);
 
   document.addEventListener('keydown', keyDownHandler);
