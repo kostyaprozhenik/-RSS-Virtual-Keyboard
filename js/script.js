@@ -218,9 +218,51 @@ function isKeyOnVirtualKeyboard(code) {
   return isFound;
 }
 
+function changeKeyboardLayout(type) {
+  const keys = document.querySelectorAll('.keyboard__key');
+  
+  switch (type) {
+    case 'langChange':
+    case 'caseChangeOnCaps':
+    case 'caseChangeAfterShift':
+      if (isEng && !isCaps) {
+        keyboardLayout = 0;
+      }
+      if (isEng && isCaps) {
+        keyboardLayout = 1;
+      }
+      if (!isEng && !isCaps) {
+        keyboardLayout = 2;
+      }
+      if (!isEng && isCaps) {
+        keyboardLayout = 3;
+      }
+      break;
+    case 'caseChangeOnShift':
+      if (isEng && !isCaps) {
+        keyboardLayout = 1;
+      }
+      if (isEng && isCaps) {
+        keyboardLayout = 0;
+      }
+      if (!isEng && !isCaps) {
+        keyboardLayout = 3;
+      }
+      if (!isEng && isCaps) {
+        keyboardLayout = 2;
+      }
+      break;
+    default:
+        break;
+    }
+  
+    for (let i = 0; i < keys.length; i += 1) {
+      keys[i].textContent = data[i].text[keyboardLayout];
+    }
+}
+
 function keypressHandler(id, input) {
   const textarea = document.querySelector('.textarea');
-  const keys = document.querySelectorAll('.keyboard__key');
   const curPos = textarea.selectionStart;
   textarea.focus();
   
@@ -247,23 +289,8 @@ function keypressHandler(id, input) {
         if (!keyPressedFlag) {
           isCaps = !isCaps;
           document.querySelector('#CapsLock').classList.toggle('keyboard__key--active');
-            if (isEng && !isCaps) {
-              keyboardLayout = 0;
-            }
-            if (isEng && isCaps) {
-              keyboardLayout = 1;
-            }
-            if (!isEng && !isCaps) {
-              keyboardLayout = 2;
-            }
-            if (!isEng && isCaps) {
-              keyboardLayout = 3;
-            }
-    
-            for (let i = 0; i < keys.length; i += 1) {
-              keys[i].textContent = data[i].text[keyboardLayout];
-            }
-            keyPressedFlag = true;
+          changeKeyboardLayout('caseChangeOnCaps');
+          keyPressedFlag = true;
         }
         break;
     case 'Enter':
@@ -272,6 +299,7 @@ function keypressHandler(id, input) {
         textarea.selectionEnd = curPos + 1;
         break;
     case 'ShiftLeft':
+    case 'ShiftRight':
         isShiftPressed = true;
         break;
     case 'AltLeft':
@@ -279,7 +307,6 @@ function keypressHandler(id, input) {
         break;
     case 'ControlLeft':
     case 'ControlRight':
-    case 'ShiftRight':
     case 'AltRight':
     case 'MetaLeft':
         break;
@@ -292,26 +319,14 @@ function keypressHandler(id, input) {
 
     if (isAltPressed && isShiftPressed && !keyPressedFlag) {
         isEng = !isEng;
-    
-        if (isEng && !isCaps) {
-          keyboardLayout = 0;
-        }
-        if (isEng && isCaps) {
-          keyboardLayout = 1;
-        }
-        if (!isEng && !isCaps) {
-          keyboardLayout = 2;
-        }
-        if (!isEng && isCaps) {
-          keyboardLayout = 3;
-        }
-    
-        for (let i = 0; i < keys.length; i += 1) {
-          keys[i].textContent = data[i].text[keyboardLayout];
-        }
-    
+
+        changeKeyboardLayout('langChange');
         localStorage.setItem('isEng', isEng);
+        keyPressedFlag = true;
+    }
     
+    if (isShiftPressed && !keyPressedFlag) {
+        changeKeyboardLayout('caseChangeOnShift');
         keyPressedFlag = true;
     }
 }
@@ -319,7 +334,9 @@ function keypressHandler(id, input) {
 function keyUnpressHandler(id) {
   switch (id) {
     case 'ShiftLeft':
+    case 'ShiftRight':
       isShiftPressed = false;
+      changeKeyboardLayout('caseChangeAfterShift');
       break;
     case 'AltLeft':
       isAltPressed = false;
